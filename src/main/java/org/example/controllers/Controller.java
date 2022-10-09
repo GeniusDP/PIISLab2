@@ -14,6 +14,9 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Scanner;
+
+import static org.example.models.Direction.*;
 
 public class Controller {
 
@@ -21,8 +24,8 @@ public class Controller {
         try (FileInputStream fs = new FileInputStream("src/main/resources/input.txt")) {
             Matrix matrix = MatrixIOUtil.readMatrix(fs);
 
-            Point botPoint = Point.ofZeroIndexationValues(matrix.getN()-2, 1);
-            Point playerPoint = Point.ofZeroIndexationValues(matrix.getN()-2, matrix.getM()-2);
+            Point botPoint = Point.ofZeroIndexationValues(matrix.getN() - 2, 1);
+            Point playerPoint = Point.ofZeroIndexationValues(matrix.getN() - 2, matrix.getM() - 2);
 
             Properties properties = new Properties();
             properties.load(new FileReader("src/main/resources/application.properties"));
@@ -38,14 +41,27 @@ public class Controller {
 
             matrix = generateContent(matrix, botPoint, playerPoint, exitPoint);
             MatrixIOUtil.printToScreen(matrix);
-            while(true) {
+            while (true) {
                 Direction direction = algorithm.perform(matrix, botPoint, playerPoint);
                 matrix = botMakesStep(direction, matrix, botPoint);
-                System.out.println(direction);
+//                System.out.println(direction);
                 MatrixIOUtil.printToScreen(matrix);
                 checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);
 
                 //step of player
+                Scanner scanner = new Scanner(System.in);
+                String s = scanner.nextLine();
+//                System.out.println(s);
+//                System.out.println(s.equals("up"));
+                Direction playerDirection = switch (s) {
+                    case "up" -> UP;
+                    case "down" -> DOWN;
+                    case "left" -> LEFT;
+                    case "right" -> RIGHT;
+                    default -> NO_MOVE;
+                };
+//                System.out.println(playerDirection);
+                matrix = playerMakesStep(playerDirection, matrix, playerPoint);
                 checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);
             }
 
@@ -61,37 +77,65 @@ public class Controller {
     }
 
     private void checkIfEndOfTheGame(Point playerPoint, Point botPoint, Point exitPoint) {
-        if(botPoint.equals(playerPoint)){
+        if (botPoint.equals(playerPoint)) {
             throw new LooseException("You have lost!");
         }
-        if(playerPoint.equals(exitPoint)){
+        if (playerPoint.equals(exitPoint)) {
             throw new WinException("You have won!");
         }
     }
 
-    private Matrix botMakesStep(Direction direction, Matrix matrix, Point botPoint) {
+    private Matrix botMakesStep(Direction direction, Matrix matrix, Point point) {
         int[][] array = matrix.getArray();
-        array[botPoint.row][botPoint.col] = 0;
+        array[point.row][point.col] = 0;
         switch (direction) {
             case UP -> {
-                array[botPoint.row - 1][botPoint.col] = -2;
-                botPoint.row--;
+                array[point.row - 1][point.col] = -2;
+                point.row--;
             }
             case DOWN -> {
-                array[botPoint.row + 1][botPoint.col] = -2;
-                botPoint.row++;
+                array[point.row + 1][point.col] = -2;
+                point.row++;
             }
             case RIGHT -> {
-                array[botPoint.row][botPoint.col + 1] = -2;
-                botPoint.col++;
+                array[point.row][point.col + 1] = -2;
+                point.col++;
             }
             case LEFT -> {
-                array[botPoint.row][botPoint.col - 1] = -2;
-                botPoint.col--;
+                array[point.row][point.col - 1] = -2;
+                point.col--;
             }
+            case NO_MOVE -> array[point.row][point.col] = -2;
         }
         return new Matrix(array);
     }
+
+    private Matrix playerMakesStep(Direction direction, Matrix matrix, Point point) {
+        int[][] array = matrix.getArray();
+        array[point.row][point.col] = 0;
+        switch (direction) {
+            case UP -> {
+                array[point.row - 1][point.col] = -3;
+                point.row--;
+            }
+            case DOWN -> {
+                array[point.row + 1][point.col] = -3;
+                point.row++;
+            }
+            case RIGHT -> {
+                array[point.row][point.col + 1] = -3;
+                point.col++;
+            }
+            case LEFT -> {
+                array[point.row][point.col - 1] = -3;
+                point.col--;
+            }
+            case NO_MOVE -> array[point.row][point.col] = -3;
+        }
+        return new Matrix(array);
+    }
+
+
 
     private Matrix generateContent(Matrix matrix, Point botPoint, Point playerPoint, Point exitPoint) {
         int[][] array = matrix.getArray();
@@ -100,7 +144,6 @@ public class Controller {
         array[exitPoint.row][exitPoint.col] = -4;
         return new Matrix(array);
     }
-
 
 
 }
