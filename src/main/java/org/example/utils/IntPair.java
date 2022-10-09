@@ -1,4 +1,4 @@
-package com.kpi.fics.piis.zaranik.utils;
+package org.example.utils;
 
 public class IntPair implements Comparable<IntPair>{
     public int first;

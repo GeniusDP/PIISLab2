@@ -1,4 +1,4 @@
-package com.kpi.fics.piis.zaranik.models;
+package org.example.models;
 
 public final class Matrix {
     public static final int MAX_SIZE = 200;
@@ -38,6 +38,15 @@ public final class Matrix {
         int x = point.getRow();
         int y = point.getCol();
         return array[x][y] == -1;
+    }
+
+    public void print(){
+        for (int i = 0; i < array.length; i++) {
+            for (int j = 0; j < array[0].length; j++) {
+                System.out.printf("%4d", array[i][j]);
+            }
+            System.out.println();
+        }
     }
 
 }

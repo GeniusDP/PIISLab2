@@ -1,7 +1,8 @@
-package com.kpi.fics.piis.zaranik.models.algorithms;
+package org.example.models.algorithms;
 
-import com.kpi.fics.piis.zaranik.models.algorithms.heuristics.HeuristicCalculator;
-import com.kpi.fics.piis.zaranik.models.algorithms.heuristics.HeuristicFinder;
+
+import org.example.models.algorithms.heuristics.HeuristicCalculator;
+import org.example.models.algorithms.heuristics.HeuristicFinder;
 
 public abstract class AbstractAlgorithm implements Algorithm {
     protected final HeuristicCalculator heuristicCalculator;

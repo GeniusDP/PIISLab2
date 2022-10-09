@@ -1,15 +1,15 @@
-package com.kpi.fics.piis.zaranik.models;
+package org.example.models;
 
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
-public final class Point {
-    private final int row;
-    private final int col;
+public class Point {
+    public int row;
+    public int col;
 
-    public Point(int rowReal, int colReal) {
+    private Point(int rowReal, int colReal) {
         if (rowReal <= 0 || colReal <= 0) {
             throw new IllegalArgumentException("not valid params");
         }
@@ -19,6 +19,10 @@ public final class Point {
 
     public int getPointId(int rowsNum) {
         return row * rowsNum + col;
+    }
+
+    public static Point ofZeroIndexationValues(int row, int col){
+        return new Point(row + 1, col + 1);
     }
 
 }

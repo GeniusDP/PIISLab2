@@ -1,4 +1,4 @@
-package com.kpi.fics.piis.zaranik.models.algorithms;
+package org.example.models.algorithms;
 
 public class NoWayFoundException extends RuntimeException{
     public NoWayFoundException(String message) {

@@ -1,4 +1,4 @@
-package com.kpi.fics.piis.zaranik.utils.coloring;
+package org.example.utils.coloring;
 
 public class ColorfulPrinter {
 

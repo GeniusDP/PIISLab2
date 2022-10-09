@@ -1,8 +1,8 @@
-package com.kpi.fics.piis.zaranik.utils;
+package org.example.utils;
 
-import com.kpi.fics.piis.zaranik.models.Matrix;
-import com.kpi.fics.piis.zaranik.utils.coloring.Color;
-import com.kpi.fics.piis.zaranik.utils.coloring.ColorfulPrinter;
+import org.example.models.Matrix;
+import org.example.utils.coloring.Color;
+import org.example.utils.coloring.ColorfulPrinter;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -64,7 +64,14 @@ public class MatrixIOUtil {
                     ColorfulPrinter.printColorfullyAndReset(Color.ANSI_RED, "X  ");
                 } else if (row[j] == 0) {
                     System.out.print("   ");
-                } else {
+                } else if (row[j] == -4) {
+                    ColorfulPrinter.printColorfullyAndReset(Color.ANSI_RED, "#  ");
+                } else if (row[j] == -2) {
+                    System.out.print(" * ");
+                } else if (row[j] == -3) {
+                    System.out.print(" @ ");
+                }
+                else {
                     String format = String.format("%2d ", row[j]);
                     ColorfulPrinter.printColorfullyAndReset(Color.ANSI_GREEN, format);
                 }
