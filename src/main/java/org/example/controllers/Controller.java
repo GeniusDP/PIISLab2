@@ -7,7 +7,8 @@ import org.example.models.Point;
 import org.example.models.algorithms.Algorithm;
 import org.example.models.algorithms.NoWayFoundException;
 import org.example.utils.MatrixIOUtil;
-import org.example.utils.Pair;
+import org.example.utils.coloring.Color;
+import org.example.utils.coloring.ColorfulPrinter;
 
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -36,18 +37,60 @@ public class Controller {
             }
 
             matrix = generateContent(matrix, botPoint, playerPoint, exitPoint);
-
-
             MatrixIOUtil.printToScreen(matrix);
-            Direction direction = algorithm.perform(matrix, playerPoint, botPoint);
-            System.out.println(direction);
-            MatrixIOUtil.printToScreen(matrix);
+            while(true) {
+                Direction direction = algorithm.perform(matrix, botPoint, playerPoint);
+                matrix = botMakesStep(direction, matrix, botPoint);
+                System.out.println(direction);
+                MatrixIOUtil.printToScreen(matrix);
+                checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);
+
+                //step of player
+                checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);
+            }
 
         } catch (NoWayFoundException e) {
             System.err.println("ERROR: Way could not be found: " + e.getMessage());
+        } catch (LooseException e) {
+            ColorfulPrinter.printColorfullyAndReset(Color.ANSI_RED, e.getMessage());
+        } catch (WinException e) {
+            ColorfulPrinter.printColorfullyAndReset(Color.ANSI_GREEN, e.getMessage());
         } catch (IOException e) {
             System.err.println("ERROR: reading was not successful:(" + e);
         }
+    }
+
+    private void checkIfEndOfTheGame(Point playerPoint, Point botPoint, Point exitPoint) {
+        if(botPoint.equals(playerPoint)){
+            throw new LooseException("You have lost!");
+        }
+        if(playerPoint.equals(exitPoint)){
+            throw new WinException("You have won!");
+        }
+    }
+
+    private Matrix botMakesStep(Direction direction, Matrix matrix, Point botPoint) {
+        int[][] array = matrix.getArray();
+        array[botPoint.row][botPoint.col] = 0;
+        switch (direction) {
+            case UP -> {
+                array[botPoint.row - 1][botPoint.col] = -2;
+                botPoint.row--;
+            }
+            case DOWN -> {
+                array[botPoint.row + 1][botPoint.col] = -2;
+                botPoint.row++;
+            }
+            case RIGHT -> {
+                array[botPoint.row][botPoint.col + 1] = -2;
+                botPoint.col++;
+            }
+            case LEFT -> {
+                array[botPoint.row][botPoint.col - 1] = -2;
+                botPoint.col--;
+            }
+        }
+        return new Matrix(array);
     }
 
     private Matrix generateContent(Matrix matrix, Point botPoint, Point playerPoint, Point exitPoint) {

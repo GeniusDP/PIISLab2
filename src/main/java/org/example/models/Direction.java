@@ -5,8 +5,8 @@ public enum Direction {
 
     public static Direction getValue(int dRow, int dCol){
         return switch (dRow){
-            case 1 -> UP;
-            case -1 -> DOWN;
+            case 1 -> DOWN;
+            case -1 -> UP;
             default -> {
                 if(dCol == 1){
                     yield RIGHT;
