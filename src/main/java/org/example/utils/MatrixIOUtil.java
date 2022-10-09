@@ -67,9 +67,9 @@ public class MatrixIOUtil {
                 } else if (row[j] == -4) {
                     ColorfulPrinter.printColorfullyAndReset(Color.ANSI_RED, "#  ");
                 } else if (row[j] == -2) {
-                    System.out.print(" * ");
+                    System.out.print("*  ");
                 } else if (row[j] == -3) {
-                    System.out.print(" @ ");
+                    System.out.print("@  ");
                 }
                 else {
                     String format = String.format("%2d ", row[j]);

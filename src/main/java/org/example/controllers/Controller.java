@@ -62,6 +62,7 @@ public class Controller {
                 };
 //                System.out.println(playerDirection);
                 matrix = playerMakesStep(playerDirection, matrix, playerPoint);
+                MatrixIOUtil.printToScreen(matrix);
                 checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);
             }
 
