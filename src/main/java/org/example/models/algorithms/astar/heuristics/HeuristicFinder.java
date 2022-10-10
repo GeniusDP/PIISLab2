@@ -1,4 +1,4 @@
-package org.example.models.algorithms.heuristics;
+package org.example.models.algorithms.astar.heuristics;
 
 import lombok.RequiredArgsConstructor;
 

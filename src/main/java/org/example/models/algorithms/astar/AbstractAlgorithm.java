@@ -1,8 +1,8 @@
-package org.example.models.algorithms;
+package org.example.models.algorithms.astar;
 
 
-import org.example.models.algorithms.heuristics.HeuristicCalculator;
-import org.example.models.algorithms.heuristics.HeuristicFinder;
+import org.example.models.algorithms.astar.heuristics.HeuristicCalculator;
+import org.example.models.algorithms.astar.heuristics.HeuristicFinder;
 
 public abstract class AbstractAlgorithm implements Algorithm {
     protected final HeuristicCalculator heuristicCalculator;

@@ -2,6 +2,7 @@ package org.example.models;
 
 import lombok.Getter;
 import lombok.ToString;
+import org.example.models.algorithms.astar.DistFinder;
 
 import java.util.Objects;
 
@@ -39,4 +40,9 @@ public class Point {
     public int hashCode() {
         return Objects.hash(row, col);
     }
+
+    public int manhattanDist(Point point){
+        return Math.abs(this.row - point.row) + Math.abs(this.col - point.col);
+    }
+
 }

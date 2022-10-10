@@ -1,31 +1,32 @@
-package org.example.models.algorithms;
+package org.example.models.algorithms.astar;
 
-import lombok.NoArgsConstructor;
-import org.example.models.Direction;
 import org.example.models.Matrix;
 import org.example.models.Point;
-import org.example.models.algorithms.heuristics.HeuristicCalculator;
+import org.example.models.algorithms.astar.heuristics.HeuristicCalculator;
+import org.example.models.algorithms.astar.heuristics.HeuristicFinder;
 import org.example.utils.IntPair;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.PriorityQueue;
 
-import static org.example.models.Direction.*;
+import static org.example.models.algorithms.astar.Algorithm.INF;
 
-@NoArgsConstructor
-public class AStarPerformer extends AbstractAlgorithm {
+public class DistFinder {
 
     private boolean[] closed;
     private boolean[] isOpenNow;
     private int[] from;
     private int[] g;
     private int[] f;
+    protected final HeuristicCalculator heuristicCalculator;
+    protected final HeuristicFinder heuristicFinder;
 
-    public AStarPerformer(HeuristicCalculator heuristicCalculator) {
-        super(heuristicCalculator);
+    public DistFinder() {
+        this.heuristicCalculator = HeuristicCalculator::manhattan;
+        this.heuristicFinder = new HeuristicFinder(heuristicCalculator);
     }
 
-    @Override
-    public Direction perform(Matrix matrix, Point start, Point finish) {
+    public int getMinimalDist(Matrix matrix, Point start, Point finish) {
         int[][] array = matrix.getArray();
         int[][] h = heuristicFinder.findHeuristic(matrix.getN(), matrix.getM());
 
@@ -57,59 +58,9 @@ public class AStarPerformer extends AbstractAlgorithm {
         }
 
         if(from[finishId]==-1){
-            return NO_MOVE;
+            return INF;
         }
-        return findDirectionFromStartToFinish(from, array, finishId);
-    }
-
-    private Matrix findWayFromStartToFinish(int[] parents, int[][] array, int finishId) {
-        List<Integer> way = new ArrayList<>();
-        int index = finishId;
-        way.add(index);
-        while (parents[index] != -1) {
-            index = parents[index];
-            way.add(index);
-        }
-        way.add(index);
-        Collections.reverse(way);
-        for (int i = 0; i < way.size(); i++) {
-            int y = way.get(i) / array.length;
-            int x = way.get(i) % array.length;
-            if (array[y][x] == -1) {
-                continue;
-            }
-            array[y][x] = i;
-        }
-        return new Matrix(array);
-    }
-
-    private Direction findDirectionFromStartToFinish(int[] parents, int[][] array, int finishId) {
-        List<Integer> way = new ArrayList<>();
-        int index = finishId;
-        way.add(index);
-        while (parents[index] != -1) {
-            index = parents[index];
-            way.add(index);
-        }
-        Collections.reverse(way);
-
-        int x1 = 0, y1 = 0;
-        int x2 = 0, y2 = 0;
-        for (int i = 0; i < way.size(); i++) {
-            int y = way.get(i) / array.length;
-            int x = way.get(i) % array.length;
-//            System.out.print("(i=" + y + ",j=" + x + ") | ");
-//            array[y][x] = i;
-            if(i == 0){
-                y1 = y;
-                x1 = x;
-            }
-            if(i == 1){
-                y2 = y;
-                x2 = x;
-            }
-        }
-        return Direction.getValue(y2-y1, x2-x1);
+        return g[finishId];
     }
 
 

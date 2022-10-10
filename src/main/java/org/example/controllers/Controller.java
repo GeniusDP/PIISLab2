@@ -4,8 +4,9 @@ import org.example.controllers.services.MatrixValidator;
 import org.example.models.Direction;
 import org.example.models.Matrix;
 import org.example.models.Point;
-import org.example.models.algorithms.Algorithm;
-import org.example.models.algorithms.NoWayFoundException;
+import org.example.models.algorithms.astar.Algorithm;
+import org.example.models.algorithms.astar.NoWayFoundException;
+import org.example.models.minimax.template.MinimaxTemplate;
 import org.example.utils.MatrixIOUtil;
 import org.example.utils.coloring.Color;
 import org.example.utils.coloring.ColorfulPrinter;
@@ -14,9 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Scanner;
-
-import static org.example.models.Direction.*;
 
 public class Controller {
 
@@ -24,16 +22,15 @@ public class Controller {
         try (FileInputStream fs = new FileInputStream("src/main/resources/input.txt")) {
             Matrix matrix = MatrixIOUtil.readMatrix(fs);
 
-            Point botPoint = Point.ofZeroIndexationValues(matrix.getN() - 2, 1);
-            Point playerPoint = Point.ofZeroIndexationValues(matrix.getN() - 2, matrix.getM() - 2);
+//            Point botPoint = Point.ofZeroIndexationValues(3, 4);
+//            Point playerPoint = Point.ofZeroIndexationValues(2, 2);
 
             Properties properties = new Properties();
             properties.load(new FileReader("src/main/resources/application.properties"));
 
-            int exitRow = Integer.parseInt((String) properties.get("exit.row"));
-            int exitCol = Integer.parseInt((String) properties.get("exit.col"));
-
-            Point exitPoint = Point.ofZeroIndexationValues(exitRow, exitCol);
+            Point exitPoint = readPoint(properties, "exit");
+            Point botPoint = readPoint(properties, "bot");
+            Point playerPoint = readPoint(properties, "player");
 
             if (!MatrixValidator.isValid(matrix, botPoint, playerPoint, exitPoint)) {
                 throw new NoWayFoundException("start and finish ceils should not be obstacles");
@@ -44,26 +41,17 @@ public class Controller {
             while (true) {
                 Direction direction = algorithm.perform(matrix, botPoint, playerPoint);
                 matrix = botMakesStep(direction, matrix, botPoint);
-//                System.out.println(direction);
                 MatrixIOUtil.printToScreen(matrix);
                 checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);
 
                 //step of player
-                Scanner scanner = new Scanner(System.in);
-                String s = scanner.nextLine();
-//                System.out.println(s);
-//                System.out.println(s.equals("up"));
-                Direction playerDirection = switch (s) {
-                    case "up" -> UP;
-                    case "down" -> DOWN;
-                    case "left" -> LEFT;
-                    case "right" -> RIGHT;
-                    default -> NO_MOVE;
-                };
-//                System.out.println(playerDirection);
-                matrix = playerMakesStep(playerDirection, matrix, playerPoint);
+                MinimaxTemplate.State s = new MinimaxTemplate.State(matrix, true);
+                matrix = MinimaxTemplate.minimaxDecision(s).getState();
+                playerPoint = matrix.findValue(-3);
                 MatrixIOUtil.printToScreen(matrix);
                 checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);
+                ColorfulPrinter.printlnColorfullyAndReset(Color.ANSI_BLUE,
+                        "****************************************************");
             }
 
         } catch (NoWayFoundException e) {
@@ -75,6 +63,13 @@ public class Controller {
         } catch (IOException e) {
             System.err.println("ERROR: reading was not successful:(" + e);
         }
+    }
+
+    private Point readPoint(Properties properties, String name) {
+        int row = Integer.parseInt((String) properties.get(name + ".row"));
+        int col = Integer.parseInt((String) properties.get(name + ".col"));
+
+        return Point.ofZeroIndexationValues(row, col);
     }
 
     private void checkIfEndOfTheGame(Point playerPoint, Point botPoint, Point exitPoint) {
@@ -111,31 +106,30 @@ public class Controller {
         return new Matrix(array);
     }
 
-    private Matrix playerMakesStep(Direction direction, Matrix matrix, Point point) {
-        int[][] array = matrix.getArray();
-        array[point.row][point.col] = 0;
-        switch (direction) {
-            case UP -> {
-                array[point.row - 1][point.col] = -3;
-                point.row--;
-            }
-            case DOWN -> {
-                array[point.row + 1][point.col] = -3;
-                point.row++;
-            }
-            case RIGHT -> {
-                array[point.row][point.col + 1] = -3;
-                point.col++;
-            }
-            case LEFT -> {
-                array[point.row][point.col - 1] = -3;
-                point.col--;
-            }
-            case NO_MOVE -> array[point.row][point.col] = -3;
-        }
-        return new Matrix(array);
-    }
-
+//    private Matrix playerMakesStep(Direction direction, Matrix matrix, Point point) {
+//        int[][] array = matrix.getArray();
+//        array[point.row][point.col] = 0;
+//        switch (direction) {
+//            case UP -> {
+//                array[point.row - 1][point.col] = -3;
+//                point.row--;
+//            }
+//            case DOWN -> {
+//                array[point.row + 1][point.col] = -3;
+//                point.row++;
+//            }
+//            case RIGHT -> {
+//                array[point.row][point.col + 1] = -3;
+//                point.col++;
+//            }
+//            case LEFT -> {
+//                array[point.row][point.col - 1] = -3;
+//                point.col--;
+//            }
+//            case NO_MOVE -> array[point.row][point.col] = -3;
+//        }
+//        return new Matrix(array);
+//    }
 
 
     private Matrix generateContent(Matrix matrix, Point botPoint, Point playerPoint, Point exitPoint) {

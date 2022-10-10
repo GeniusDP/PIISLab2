@@ -1,4 +1,4 @@
-package org.example.models.algorithms;
+package org.example.models.algorithms.astar;
 
 import org.example.models.Direction;
 import org.example.models.Matrix;

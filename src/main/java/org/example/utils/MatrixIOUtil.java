@@ -65,7 +65,7 @@ public class MatrixIOUtil {
                 } else if (row[j] == 0) {
                     System.out.print("   ");
                 } else if (row[j] == -4) {
-                    ColorfulPrinter.printColorfullyAndReset(Color.ANSI_RED, "#  ");
+                    ColorfulPrinter.printColorfullyAndReset(Color.ANSI_GREEN, "#  ");
                 } else if (row[j] == -2) {
                     System.out.print("*  ");
                 } else if (row[j] == -3) {
