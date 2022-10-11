@@ -27,7 +27,6 @@ public class AlphaBetaPruning {
                     int v2 = minValue(state2, -INF, INF);
                     return Integer.compare(v1, v2);
                 }).get();
-        //Comparator.comparing(AlphaBetaPruning::minValue)
     }
 
     private static int maxValue(State state, int alpha, int beta) {

@@ -46,10 +46,10 @@ public class Controller {
                 checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);
 
                 //step of player
-//                MinimaxTemplate.State s = new MinimaxTemplate.State(matrix, true);
-//                matrix = MinimaxTemplate.minimaxDecision(s).getState();
-                AlphaBetaPruning.State state = new AlphaBetaPruning.State(matrix, true);
-                matrix = AlphaBetaPruning.minimaxDecision(state).getState();
+                MinimaxTemplate.State s = new MinimaxTemplate.State(matrix, true);
+                matrix = MinimaxTemplate.minimaxDecision(s).getState();
+//                AlphaBetaPruning.State state = new AlphaBetaPruning.State(matrix, true);
+//                matrix = AlphaBetaPruning.minimaxDecision(state).getState();
                 playerPoint = matrix.findValue(-3);
                 MatrixIOUtil.printToScreen(matrix);
                 checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);
