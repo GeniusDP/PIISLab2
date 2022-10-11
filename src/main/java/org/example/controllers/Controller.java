@@ -6,6 +6,7 @@ import org.example.models.Matrix;
 import org.example.models.Point;
 import org.example.models.algorithms.astar.Algorithm;
 import org.example.models.algorithms.astar.NoWayFoundException;
+import org.example.models.alpha_beta_pruning.AlphaBetaPruning;
 import org.example.models.minimax.template.MinimaxTemplate;
 import org.example.utils.MatrixIOUtil;
 import org.example.utils.coloring.Color;
@@ -45,8 +46,10 @@ public class Controller {
                 checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);
 
                 //step of player
-                MinimaxTemplate.State s = new MinimaxTemplate.State(matrix, true);
-                matrix = MinimaxTemplate.minimaxDecision(s).getState();
+//                MinimaxTemplate.State s = new MinimaxTemplate.State(matrix, true);
+//                matrix = MinimaxTemplate.minimaxDecision(s).getState();
+                AlphaBetaPruning.State state = new AlphaBetaPruning.State(matrix, true);
+                matrix = AlphaBetaPruning.minimaxDecision(state).getState();
                 playerPoint = matrix.findValue(-3);
                 MatrixIOUtil.printToScreen(matrix);
                 checkIfEndOfTheGame(playerPoint, botPoint, exitPoint);

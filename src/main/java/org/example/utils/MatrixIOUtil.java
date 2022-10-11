@@ -1,6 +1,7 @@
 package org.example.utils;
 
 import org.example.models.Matrix;
+import org.example.models.Point;
 import org.example.utils.coloring.Color;
 import org.example.utils.coloring.ColorfulPrinter;
 
@@ -57,6 +58,7 @@ public class MatrixIOUtil {
     }
 
     public static void printToScreen(Matrix matrix) {
+        Point bot = matrix.findValue(-2);
         int[][] array = matrix.getArray();
         for (int[] row : array) {
             for (int j = 0; j < row.length; j++) {
@@ -66,12 +68,15 @@ public class MatrixIOUtil {
                     System.out.print("   ");
                 } else if (row[j] == -4) {
                     ColorfulPrinter.printColorfullyAndReset(Color.ANSI_GREEN, "#  ");
+                } else if (row[j] == -3) {
+                    if (bot == null) {
+                        System.out.print("*  ");
+                    } else {
+                        System.out.print("@  ");
+                    }
                 } else if (row[j] == -2) {
                     System.out.print("*  ");
-                } else if (row[j] == -3) {
-                    System.out.print("@  ");
-                }
-                else {
+                } else {
                     String format = String.format("%2d ", row[j]);
                     ColorfulPrinter.printColorfullyAndReset(Color.ANSI_GREEN, format);
                 }

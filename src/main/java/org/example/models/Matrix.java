@@ -65,8 +65,7 @@ public final class Matrix {
         }
         int dExit = this.realDist(playerPoint, exitPoint);
         int dBot = this.realDist(playerPoint, botPoint);
-//        System.out.println("Metrix: " + (dBot - dExit));
-        return dBot - 2*dExit;
+        return dBot - dExit;
     }
 
     private int realDist(Point p1, Point p2) {
